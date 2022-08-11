@@ -55,8 +55,8 @@
               <!-- Single Catagory Card-->
               @foreach ($bill_category as $bill_cat )
               <div class="col-4">
-                <div class="card mb-3 catagory-card">
-                  <div class="card-body"><a href="{{url('category/'.md5('this is the bill').'_'.$bill_cat->id.'_'.$bill_cat->name.'_'.'3874983')}}"><img  object-fit="cover" src="{{asset('/images/category/'.$bill_cat->image)}}"><span>{{$bill_cat->name}}</span></a></div>
+                <div class="card mb-3 catagory-card" >
+                  <div class="card-body"><a style="padding:0px" href="{{url('category/'.md5('this is the bill').'_'.$bill_cat->id.'_'.$bill_cat->name.'_'.'3874983')}}"><img   style="width:20px; height:20px" object-fit="cover" src="{{asset('/images/category/'.$bill_cat->image)}}"><span>{{$bill_cat->name}}</span></a></div>
                 </div>
               </div>
               @endforeach
