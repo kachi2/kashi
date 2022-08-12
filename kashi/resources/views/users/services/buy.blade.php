@@ -51,7 +51,7 @@
                   <div class="title mb-2">
                   
                   <i class="lni lni-layout"></i><span>{{$slug->biller_name == 'smartcard'? 'Smartcard': 'Meter Numer'}}</span></div>
-                  <input class="form-control @error('billercode') is-invalid @enderror" id="verify" maxlength="18" type="number" value="{{old('billercode')}}" name="billercode" placeholder="000000000" autocomplete="off" required>
+                  <input class="form-control  @error('billercode') is-invalid @enderror" id="verify"  value="{{old('billercode')}}" maxlength="18" type="number" value="{{old('billercode')}}" name="billercode" placeholder="000000000" autocomplete="off" required>
                 @error('billercode')
                   <span class="invalid-feedback" role="alert">
                     <strong>{{ $message }}</strong>
@@ -64,7 +64,7 @@
                   <i class="lni lni-user"></i><span>Customer Name</span>
                   </div>
                 <div class="input-group mb-2">
-                <input type="text" name="billerName" class="form-control text-justify" id="verifyName" readonly>
+                <input type="text" name="billerName" value="{{old('billerName')}}"  class="form-control text-justify" id="verifyName" readonly>
                 <div class="input-group-append">
                   <span class="input-group-text" id="load"></span>
                 </div>
@@ -75,7 +75,7 @@
                 <div class="form-group">
                   <div class="title mb-2">
                   <i class="lni lni-phone"></i><span>Phone Number</span></div>
-                  <input class="form-control @error('phone') is-invalid @enderror" id="phone" minlength="9" maxlength="13" type="number" value="{{old('phone')}}" name="phone" placeholder="0803000000" autocomplete="off">
+                  <input class="form-control @error('phone') is-invalid  @enderror" id="phone" value="{{old('phone')}}" minlength="9" maxlength="13" type="number" value="{{old('phone')}}" name="phone" placeholder="0803000000" autocomplete="off">
                 @error('phone')
                   <span class="invalid-feedback" role="alert">
                     <strong>{{ $message }}</strong>
@@ -92,7 +92,7 @@
 
                 <div class="form-group">
                   <div class="title mb-2"><i class="lni lni-money-location"></i><span>Amount</span></div>
-                  <input class="form-control @error('amount') is-invalid @enderror"   id="myInput1"  onchange="myChangeFunction(this)" type="number"  
+                  <input class="form-control @error('amount') is-invalid @enderror"  value="{{old('amount')}}"  id="myInput1"  onchange="myChangeFunction(this)" type="number"  
                   name="amount" placeholder="0.00" autocomplete="off">
                    @error('amount')
                                     <span class="invalid-feedback" role="alert">
@@ -129,10 +129,7 @@
 @endsection
 
    @section('script')
-   
- 
    <script>
-   
      $(window).on('load',function(){
    
      document.getElementById("load").hidden = true;

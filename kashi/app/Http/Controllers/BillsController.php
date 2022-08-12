@@ -54,26 +54,27 @@ class BillsController extends Controller
         }
 
     } else if($data['slug']->bill_category_id == 6){
-                $apiResult = app('App\Http\Controllers\BillsAPI')->zealData_variation($data['slug']->slug); 
-              // dd($apiResult['data'] );
-                if($apiResult['data']){     
-                foreach ($apiResult['data'] as $key => $value) {
-                   // dd($value);
-                    $da['v_code'] = $value['bundle'];
-                    $da['price'] = $value['price'] + $value['price']*0.02;
-                    $da['name'] = $value['network'];
-                    $da['period'] = $value['validity'];
+                $apiResult = app('App\Http\Controllers\BillsAPI')->DataVariation($data['slug']->slug); 
+                if($apiResult){     
+                foreach ($apiResult as $value) {
+                    $da['v_code'] = $value['variation'];
+                    $da['price'] = $value['amount'];
+                    $da['api_key'] = $value['code'];
+                    $da['name'] = $value['slug'];
+                    $da['period'] = '30 Days';
                     $vars[] = $da;
-                    $xda[$value['bundle']] = $value['bundle'].' '.'N'.number_format($value['price'] + $value['price']*0.02,2).' '.$value['validity'];
-                    $vars_x = $xda;
+                    $data_descptn[$value['variation']] =  strtoupper($value['slug']).' ₦'.number_format($value['amount']).' '. $value['variation'].' - '.'30 Days';
+                    $dataContent = $data_descptn;
                 }
+                
                 $data['varations'] = $vars;
-                $data['varation_labels'] = $vars_x; 
+                $data['varation_labels'] = $dataContent; 
+               
             }else{ 
                 $data['varations'] = '';
                $data['varation_labels'] = ''; 
                 }
-               // dd($data);
+                
         }else{ 
             $data['varations'] = '';
             $data['varation_labels'] = ''; 
@@ -86,13 +87,11 @@ class BillsController extends Controller
       // dd($request->all());
        $validator=  $this->validate($request, [
             'amount'=>['required', 'min:1'],
-            'phone' => ['required', 'min:9','regex:/(070|080|081|090)[0-9]/'],
+            'phone' => ['required','Numeric', 'min:9','regex:/(070|080|081|090)[0-9]/'],
             'variation',
             'billercode'=>'Numeric',
             'billerName',
-            'phone'=>'Numeric'
         ]);  
-       // dd($validator);
         if(!$validator){
             return back();
         }else{
@@ -111,7 +110,7 @@ class BillsController extends Controller
         } 
         
         if(!empty($request->variation)){
-            $varies = $this->get_variation($slug);
+           $vars = $this->get_variation($slug);
         }
         //commission calculator
         if ($api_product->commission_type == 'flat' && auth()->user()->level == 2) {
@@ -138,8 +137,7 @@ class BillsController extends Controller
         $amount_charged = $request->amount;
         $total_amount = $amount_charged + $fee;
         $transactionId = rand(11111,99999).time();
-        //initiate Transaction
-        $createTransaction = bill_transactions::create([
+       $tranz =  bill_transactions::create([
            'amount' => $request->amount,
            'fee' => $fee, 
            'total_amount' => $total_amount,
@@ -154,11 +152,8 @@ class BillsController extends Controller
            'biller_code' => $request->billercode,
            'service_verification' => $request->billerName,
         ]);
-        //charge User 
-        $this->chargeUser($transactionId);
-        //completed transaction
+      //  $this->chargeUser($transactionId);
         if($api_product->bill_category_id == 1){
-             //airtime
             $apiResult = app('App\Http\Controllers\BillsAPI')->vtpassAirtime($transactionId);
         }elseif($api_product->bill_category_id == 2){
                //data
@@ -167,30 +162,27 @@ class BillsController extends Controller
                 //pay bills
             $apiResult = app('App\Http\Controllers\BillsAPI')->vtpassBills($transactionId);
         }else if($api_product->bill_category_id == 6){
-            $zealVend = app('App\Http\Controllers\BillsAPI')->zealVend_Data($transactionId);
+            $vend = app('App\Http\Controllers\BillsAPI')->Vend_Data($transactionId);
         }else{
             return back();
         }
-       //dd($apiResult['code']);
         if(isset($apiResult)){
         if($apiResult['code'] == 'success'){
-            $newUpdate = bill_transactions::where('transactionId', $transactionId)->update([
+             bill_transactions::where('transactionId', $transactionId)->update([
                 'status' => 'Successful'
             ]);
             
          $referral = User::where('id', auth()->user()->referral_id)->first();
         if($referral){
-             
         $tt = explode(" ", auth()->user()->name);
         $name = $tt[0];
             $ref_com = ((0.2/ 100)* $request->amount);
             $newWallet = $referral->wallet + $ref_com;
-            $update = User::where('id', $referral->id)
-                    ->update(['wallet' => $newWallet]);
-                $wallet = wallet_transaction::create([
+            User::where('id', $referral->id)->update(['wallet' => $newWallet]);
+                wallet_transaction::create([
                 'user_id' => $referral->id,
                 'transaction_ref' => $transactionId,
-                'external_ref'=>null,
+                'external_ref'=>null, 
                 'purpose' => 'Referral Commission from'.' '.$name,
                 'type' => 'credit',
                 'amount'=> $ref_com,
@@ -198,24 +190,22 @@ class BillsController extends Controller
                 'prev_balance'=>$referral->wallet,
                 'avail_balance' => $newWallet
             ]);
-            
             }
             return view('users.services.successpay');
 
-
         }else if($apiResult['code'] == 'failed'){
-            $newUpdate = bill_transactions::where('transactionId', $transactionId)->update([
+            bill_transactions::where('transactionId', $transactionId)->update([
                 'status' => 'Failed'
             ]);
-            sleep(5);
+            sleep(3);
             $user_w = User::where('id', auth()->user()->id)->first();
             $newWallet = $user_w->wallet + $total_amount;
             $newCom = $user_w->comm_wallet - $commission;
-            $updateUser = user::where('id', $user->id)->update([
+            user::where('id', $user->id)->update([
                 'wallet'=>$newWallet,
                 'comm_wallet'=> $newCom,
             ]);
-            $wallet = wallet_transaction::create([
+             wallet_transaction::create([
                 'user_id' => $user->id,
                 'transaction_ref' => $transactionId,
                 'external_ref'=>null,
@@ -231,18 +221,18 @@ class BillsController extends Controller
             return back();
 
         }else if($apiResult['code'] == 'pending'){
-            $newUpdate = bill_transactions::where('transactionId', $transactionId)->update([
+            bill_transactions::where('transactionId', $transactionId)->update([
                 'status' => 'Failed'
             ]);
             sleep(5);
             $user_w = User::where('id', auth()->user()->id)->first();
             $newWallet = $user_w->wallet + $total_amount;
             $newCom = $user_w->comm_wallet - $commission;
-            $updateUser = user::where('id', $user->id)->update([
+            user::where('id', $user->id)->update([
                 'wallet'=>$newWallet,
                 'comm_wallet'=> $newCom,
             ]);
-            $wallet = wallet_transaction::create([
+            wallet_transaction::create([
                 'user_id' => $user->id,
                 'transaction_ref' => $transactionId,
                 'external_ref'=>null,
@@ -258,18 +248,18 @@ class BillsController extends Controller
                 return back();
             }
             else if($apiResult['code'] == 'error'){
-            $newUpdate = bill_transactions::where('transactionId', $transactionId)->update([
+            bill_transactions::where('transactionId', $transactionId)->update([
                 'status' => 'Failed'
             ]);
             sleep(5);
             $user_w = User::where('id', auth()->user()->id)->first();
             $newWallet = $user_w->wallet + $total_amount;
             $newCom = $user_w->comm_wallet - $commission;
-            $updateUser = user::where('id', $user->id)->update([
+            user::where('id', $user->id)->update([
                 'wallet'=>$newWallet,
                 'comm_wallet'=> $newCom,
             ]);
-            $wallet = wallet_transaction::create([
+            wallet_transaction::create([
                 'user_id' => $user->id,
                 'transaction_ref' => $transactionId,
                 'external_ref'=>null,
@@ -289,28 +279,28 @@ class BillsController extends Controller
             return back();
             }
     
-        }elseif(isset($zealVend)){
+        }elseif(isset($vend)){
           //dd($zealVend);
           
-           if($zealVend['status'] == 'success'){
-            $newUpdate = bill_transactions::where('transactionId', $transactionId)->update([
+           if($vend['status'] == 'success'){
+             bill_transactions::where('transactionId', $transactionId)->update([
                 'status' => 'Successfull'
             ]);
             return view('users.services.successpay');
                
-           }elseif($zealVend['status'] == 'failed'){
-            $newUpdate = bill_transactions::where('transactionId', $transactionId)->update([
+           }elseif($vend['status'] == 'failed'){
+             bill_transactions::where('transactionId', $transactionId)->update([
                 'status' => 'Failed'
             ]);
             sleep(5);
             $user_w = User::where('id', auth()->user()->id)->first();
             $newWallet = $user_w->wallet + $total_amount;
             $newCom = $user_w->comm_wallet - $commission;
-            $updateUser = user::where('id', $user->id)->update([
+            user::where('id', $user->id)->update([
                 'wallet'=>$newWallet,
                 'comm_wallet'=> $newCom,
             ]);
-            $wallet = wallet_transaction::create([
+            wallet_transaction::create([
                 'user_id' => $user->id,
                 'transaction_ref' => $transactionId,
                 'external_ref'=>null,
@@ -326,18 +316,18 @@ class BillsController extends Controller
                 return back();
             
         }else{
-            $newUpdate = bill_transactions::where('transactionId', $transactionId)->update([
+            bill_transactions::where('transactionId', $transactionId)->update([
                 'status' => 'Failed'
             ]);
             sleep(5);
             $user_w = User::where('id', auth()->user()->id)->first();
             $newWallet = $user_w->wallet + $total_amount;
             $newCom = $user_w->comm_wallet - $commission;
-            $updateUser = user::where('id', $user->id)->update([
+             user::where('id', $user->id)->update([
                 'wallet'=>$newWallet,
                 'comm_wallet'=> $newCom,
             ]);
-            $wallet = wallet_transaction::create([
+            wallet_transaction::create([
                 'user_id' => $user->id,
                 'transaction_ref' => $transactionId,
                 'external_ref'=>null,
@@ -367,11 +357,11 @@ class BillsController extends Controller
         $userOldWallet = $user->wallet;
         $userNewWallet = $user->wallet - $transaction->total_amount;
         $userComm = $user->comm_wallet + $transaction->commission;
-        $updateUser = user::where('id', $user->id)->update([
+        user::where('id', $user->id)->update([
             'wallet'=>$userNewWallet,
             'comm_wallet' =>$userComm 
         ]);
-        $wallet = wallet_transaction::create([
+        wallet_transaction::create([
             'user_id' => $user->id,
             'transaction_ref' => $transaction->transactionId,
             'external_ref'=>null,

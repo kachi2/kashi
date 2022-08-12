@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\bill_api_attempts;
 use App\bill_products;
 use App\bill_transactions;
+use App\SmeData;
 use Symfony\Component\HttpKernel\DataCo2llector\AjaxDataCollector;
 
 class BillsAPI extends Controller
@@ -14,7 +15,7 @@ class BillsAPI extends Controller
     {
         $this->vtpassUsername =  'mikkynoble@gmail.com';
         $this->vtpassPassword =  'Mikkynoble@1';
-        $this->Zeal_Vend = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwczovL3plYWx2ZW5kLmNvbS9hcGkvbG9naW4iLCJpYXQiOjE1OTgwMTgxNzYsIm5iZiI6MTU5ODAxODE3NiwianRpIjoibWI3ck5JSjlid2UzcFpIeCIsInN1YiI6MjcsInBydiI6Ijg3ZTBhZjFlZjlmZDE1ODEyZmRlYzk3MTUzYTE0ZTBiMDQ3NTQ2YWEifQ.Xq0i1GTnOgemahsZ5WgPu7kK7K_UIdgj__gi106QZgQ";
+        $this->API_Vend = "b6fd39de1984f92465cd8d9169092ba9";
     }
     
     public function vtpass_wallet(){
@@ -339,37 +340,46 @@ class BillsAPI extends Controller
             return $response;
             }
 
-
-            public function zealVend_Data($transactionId){
+            public function Vend_Data($transactionId){
                 $transaction = bill_transactions::where('transactionId', $transactionId)->first();
                 $requestId = 'payM'.rand(111111,9999999).rand(111,333);
-                $data = array(
-                    "network" =>$transaction->bill_product->slug,
-                    "bundle" => $transaction->variation,
-                    "number" => $transaction->phone,
-                    "referrence" => $requestId
-                );
-                $post = json_encode($data, true); 
-                //dd($post);
+                $dataId = SmeData::where('variation', $transaction->variation)->first();
+                // $data = array(
+                //     "network" => 01,
+                //     "dataplan" => $dataId->code,
+                //     "mobileno" => $transaction->phone,
+                // );
+                // $post = json_encode($data, true); 
+            
                 $cURL = curl_init();
                     curl_setopt_array($cURL, array(
-                    CURLOPT_URL => "https://zealvend.com/api/data/vend",
+                    CURLOPT_URL => "https://iSub.com.ng/buydata_api",
                     CURLOPT_RETURNTRANSFER => true,
                     CURLOPT_ENCODING => "",
                     CURLOPT_MAXREDIRS => 10,
                     CURLOPT_HTTPHEADER => array(
-                        "Content-Type: application/json",
-                        "Authorization: Bearer".$this->Zeal_Vend
+                        "AuthorizationToken: ".$this->API_Vend,
+                        "cache-control: no-cache"
                     ),
                     CURLOPT_TIMEOUT => 0,
                     CURLOPT_FOLLOWLOCATION => true,
                     CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
                     CURLOPT_CUSTOMREQUEST => "POST",
-                    CURLOPT_POSTFIELDS => $post,
+                    CURLOPT_POSTFIELDS => array(
+                        'network' => 01,
+                        'mobileno' => $transaction->phone,
+                        'dataplan' => $dataId->code,
+                        ),
                     ));
                     $resp = curl_exec($cURL);
                     curl_close($cURL);
                     $response = json_decode($resp, true);
+                    dd($resp);
                 return $response;
                 }
+
+        public function DataVariation($slug){
+            $data = SmeData::where('slug', $slug)->get();
+            return $data;
+        }
 }
