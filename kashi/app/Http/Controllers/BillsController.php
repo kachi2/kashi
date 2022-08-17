@@ -152,7 +152,7 @@ class BillsController extends Controller
            'biller_code' => $request->billercode,
            'service_verification' => $request->billerName,
         ]);
-      //  $this->chargeUser($transactionId);
+        $this->chargeUser($transactionId);
         if($api_product->bill_category_id == 1){
             $apiResult = app('App\Http\Controllers\BillsAPI')->vtpassAirtime($transactionId);
         }elseif($api_product->bill_category_id == 2){
