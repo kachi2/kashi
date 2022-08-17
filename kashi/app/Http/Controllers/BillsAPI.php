@@ -314,7 +314,7 @@ class BillsAPI extends Controller
             curl_setopt($cURL, CURLOPT_URL, 'https://zealvend.com/api/data/bundles?network='.$slug);
             curl_setopt($cURL, CURLOPT_HTTPHEADER, array(
                 "Content-Type: application/json",
-                "Authorization: Bearer".$this->Zeal_Vend
+                "Authorization: Bearer"
             ));
             curl_setopt($cURL, CURLOPT_RETURNTRANSFER, true); 
             $se = curl_exec($cURL);
@@ -329,7 +329,7 @@ class BillsAPI extends Controller
             curl_setopt($cURL, CURLOPT_URL, 'https://zealvend.com/api/user/profile');
             curl_setopt($cURL, CURLOPT_HTTPHEADER, array(
                 "Content-Type: application/json",
-                "Authorization: Bearer".$this->Zeal_Vend
+                "Authorization: Bearer"
             ));
             curl_setopt($cURL, CURLOPT_RETURNTRANSFER, true); 
             $se = curl_exec($cURL);
