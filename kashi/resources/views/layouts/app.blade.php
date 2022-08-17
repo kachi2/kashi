@@ -13,8 +13,6 @@
 
 <meta name="google-site-verification" content="" />
 <!-- Google Tag Manager -->
-
-
   <title> @if(isset($title)) {{$title}} @else Home  @endif | {{config('app.name')}}</title>
   
     <!-- CSRF Token -->
@@ -48,6 +46,12 @@
       @guest
 
  <ul class="sidenav-nav">
+  <li><a href="{{route('profile')}}"><i class="lni lni-user"></i>My Profile</a></li>
+     
+        <li><a href="{{route('notifications')}}"><i class="lni lni-alarm lni-tada-effect"></i>Notifications<span class="ml-3 badge badge-warning">@if(isset(auth()->user())){{auth()->user()->notifyCount}} @endif</span></a></li>
+        <li><a href="{{route('transactions')}}"><i class="lni lni-stats-up"></i>Transactions</a></li>
+        <li><a href="{{route('my-referrals')}}"><i class="lni lni-users"></i>My Referrals</a></li>
+        <li><a href="{{route('settings')}}"><i class="lni lni-cog"></i>Settings</a></li>
         <li><a href="{{route('register')}}"><i class="lni lni-user"></i>Register</a></li>
         <li><a href="{{route('login')}}"><i class="lni lni-user"></i>Login</a></li>
         
