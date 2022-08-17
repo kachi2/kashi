@@ -92,7 +92,7 @@ Route::get('/shops/edit/shop', 'vendorsController@edit_shop')->name('edit-shop')
 Route::post('/shops/update/shop', 'vendorsController@update_shops')->middleware('auth');
 //super admin routes 
 
-Route::group(['domain' => 'admin.paym.com.ng'], function(){
+Route::prefix('dashboard')->group(function(){
     Route::get('/', 'Auth\AdminLoginController@Showlogin')->name('admin-login');
     Route::post('/login', 'Auth\AdminLoginController@login')->name('admin.login.submit');
     Route::get('/index', 'AdminController@index')->name('admin.index')->middleware('auth:admin');
