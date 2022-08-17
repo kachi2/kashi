@@ -50,13 +50,6 @@
     <!-- Side Nav Wrapper-->
     <div class="suha-sidenav-wrapper" id="sidenavWrapper">
       <!-- Sidenav Nav-->
-   
-
- <ul class="sidenav-nav">
-        <li><a href="{{route('register')}}"><i class="lni lni-user"></i>Register</a></li>
-        <li><a href="{{route('login')}}"><i class="lni lni-user"></i>Login</a></li>
-        
-         </ul>
      
       <div class="sidenav-profile">
         <div class="user-profile"><img src="{{asset('/images/mmm.png')}}" alt="paym logo"></div>
