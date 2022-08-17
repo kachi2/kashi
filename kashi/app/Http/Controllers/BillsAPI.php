@@ -16,6 +16,7 @@ class BillsAPI extends Controller
         $this->vtpassUsername =  'mikkynoble@gmail.com';
         $this->vtpassPassword =  'Mikkynoble@1';
         $this->API_Vend = "b6fd39de1984f92465cd8d9169092ba9";
+        $this->Zeal_Vend = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwczovL3plYWx2ZW5kLmNvbS9hcGkvbG9naW4iLCJpYXQiOjE1OTgwMTgxNzYsIm5iZiI6MTU5ODAxODE3NiwianRpIjoibWI3ck5JSjlid2UzcFpIeCIsInN1YiI6MjcsInBydiI6Ijg3ZTBhZjFlZjlmZDE1ODEyZmRlYzk3MTUzYTE0ZTBiMDQ3NTQ2YWEifQ.Xq0i1GTnOgemahsZ5WgPu7kK7K_UIdgj__gi106QZgQ";
     }
     
     public function vtpass_wallet(){
@@ -314,7 +315,7 @@ class BillsAPI extends Controller
             curl_setopt($cURL, CURLOPT_URL, 'https://zealvend.com/api/data/bundles?network='.$slug);
             curl_setopt($cURL, CURLOPT_HTTPHEADER, array(
                 "Content-Type: application/json",
-                "Authorization: Bearer"
+                "Authorization: Bearer".$this->Zeal_Vend
             ));
             curl_setopt($cURL, CURLOPT_RETURNTRANSFER, true); 
             $se = curl_exec($cURL);
@@ -329,7 +330,7 @@ class BillsAPI extends Controller
             curl_setopt($cURL, CURLOPT_URL, 'https://zealvend.com/api/user/profile');
             curl_setopt($cURL, CURLOPT_HTTPHEADER, array(
                 "Content-Type: application/json",
-                "Authorization: Bearer"
+                "Authorization: Bearer".$this->Zeal_Vend
             ));
             curl_setopt($cURL, CURLOPT_RETURNTRANSFER, true); 
             $se = curl_exec($cURL);
