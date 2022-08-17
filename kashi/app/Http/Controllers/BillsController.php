@@ -282,7 +282,7 @@ class BillsController extends Controller
         }elseif(isset($vend)){
           //dd($zealVend);
           
-           if($vend['status'] == 'success'){
+           if($vend['success'] == true){
              bill_transactions::where('transactionId', $transactionId)->update([
                 'status' => 'Successfull'
             ]);

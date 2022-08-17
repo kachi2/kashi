@@ -24,7 +24,7 @@
           <div class="list-group">
             <!-- Single Notification-->
           
-            <a class="list-group-item d-flex align-items-center" href="">
+            <span class="list-group-item d-flex align-items-center" >
               <div class="noti-info">
                 <p class="mb-0" style="font-weight:bold">
                 <span>Service: {{strtoupper($transactions->bill_product->name)}}</span>
@@ -43,8 +43,7 @@
                 @else <button class="btn btn-success btn-sm">{{$transactions->status}} </button> @endif</span>
                <span> Date: {{$transactions->created_at}}<span>
                  </p>
-                
-              </div></a>
+              </div></span>
                <a href="{{route('transactions')}}" class="btn btn-primary"> Back to Transactions </a> 
           </div>
           

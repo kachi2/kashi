@@ -374,7 +374,6 @@ class BillsAPI extends Controller
                     $resp = curl_exec($cURL);
                     curl_close($cURL);
                     $response = json_decode($resp, true);
-                    dd($resp);
                 return $response;
                 }
 
