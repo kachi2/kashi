@@ -13,12 +13,7 @@
 
 <meta name="google-site-verification" content="" />
 <!-- Google Tag Manager -->
-<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
-  new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
-  j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
-  'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
-  })(window,document,'script','dataLayer','GTM-TLBPPT4');</script>
-  <!-- End Google Tag Manager -->
+
 
   <title> @if(isset($title)) {{$title}} @else Home  @endif | {{config('app.name')}}</title>
   
@@ -50,7 +45,14 @@
     <!-- Side Nav Wrapper-->
     <div class="suha-sidenav-wrapper" id="sidenavWrapper">
       <!-- Sidenav Nav-->
-     
+      @guest
+
+ <ul class="sidenav-nav">
+        <li><a href="{{route('register')}}"><i class="lni lni-user"></i>Register</a></li>
+        <li><a href="{{route('login')}}"><i class="lni lni-user"></i>Login</a></li>
+        
+         </ul>
+      @else
       <div class="sidenav-profile">
         <div class="user-profile"><img src="{{asset('/images/mmm.png')}}" alt="paym logo"></div>
         <div class="user-info">
@@ -70,12 +72,11 @@
         <li><a href="{{route('shops.index')}}"><i class="lni lni-files"></i>My Shop</a></li>
         @endif
 
-        <li><a href="{{route('notifications')}}"><i class="lni lni-alarm lni-tada-effect"></i>Notifications<span class="ml-3 badge badge-warning">@if(isset(auth()->user())) {{auth()->user()->notifyCount}} @else 0 @endif</span></a></li>
+        <li><a href="{{route('notifications')}}"><i class="lni lni-alarm lni-tada-effect"></i>Notifications<span class="ml-3 badge badge-warning">{{auth()->user()->notifyCount}}</span></a></li>
         <li><a href="{{route('transactions')}}"><i class="lni lni-stats-up"></i>Transactions</a></li>
         <li><a href="{{route('my-orders')}}"><i class="lni lni-folder"></i>My Orders</a></li>
         <li><a href="{{route('my-referrals')}}"><i class="lni lni-users"></i>My Referrals</a></li>
         <li><a href="{{route('settings')}}"><i class="lni lni-cog"></i>Settings</a></li>
-        @if(isset(auth()->user()))
         <li><a class="" href="{{ route('logout') }}"
                                        onclick="event.preventDefault();
                                                      document.getElementById('logout-form').submit();">
@@ -87,9 +88,8 @@
                                     <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
                                         @csrf
                                     </form>
-              @endif
          </ul>
-         
+         @endguest
       <!-- Go Back Button-->
       <div class="go-home-btn" id="goHomeBtn"><i class="lni lni-arrow-left"></i></div>
     </div>
