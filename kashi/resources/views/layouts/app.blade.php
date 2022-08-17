@@ -52,6 +52,7 @@
         <br><span class="btn btn-success">View</span>
         </a>
         </div>
+      </div>
  <ul class="sidenav-nav">
         <li><a href="{{route('profile')}}"><i class="lni lni-user"></i>My Profile</a></li>
         <li><a href="{{route('transactions')}}"><i class="lni lni-stats-up"></i>Transactions</a></li>
