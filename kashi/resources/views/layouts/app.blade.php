@@ -44,7 +44,14 @@
     <div class="suha-sidenav-wrapper" id="sidenavWrapper">
       <!-- Sidenav Nav-->
       @guest
-
+      <div class="sidenav-profile">
+        <div class="user-profile"><img src="{{asset('/images/mmm.png')}}" alt="paym logo"></div>
+        <div class="user-info">
+          <h6 class="user-name mb-0">guest</h6>
+         <a href="{{route('my_wallet')}}" class="available-balance">Wallet: <span>₦<span class="counter">0</span></span>
+        <br><span class="btn btn-success">View</span>
+        </a>
+        </div>
  <ul class="sidenav-nav">
         <li><a href="{{route('profile')}}"><i class="lni lni-user"></i>My Profile</a></li>
         <li><a href="{{route('transactions')}}"><i class="lni lni-stats-up"></i>Transactions</a></li>
