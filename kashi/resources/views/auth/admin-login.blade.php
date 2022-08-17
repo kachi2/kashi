@@ -1,16 +1,16 @@
 <!DOCTYPE html>
 <html lang="en">
-
-<!-- Mirrored from themes.pixelstrap.com/bigdeal/admin/login.html by HTTrack Website Copier/3.x [XR&CO'2014], Tue, 21 Apr 2020 23:08:32 GMT -->
 <head>
+    <meta charset="utf-8">
+  <meta name="keywords" content="paym.com.ng, buy airtime, buy cheap data, buy power">
+  <meta name="author" content="paym.com.ng">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+ 
+  <meta name="description" content="paym.com.ng Platform for quick purchase of Airtime, Internet Data Bundles, DSTV, GOTV, PHCN and payment for other services in Nigeria">
+        
+  <meta name="keywords" content="paym.com.ng  - Buy airtime online, buy MTN airtime, buy internet data subscription, Etisalat Glo Airtel Airtime, DSTV payment,GOTV payment,PHCN payment">
 
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Bigdeal admin is super flexible, powerful, clean &amp; modern responsive bootstrap 4 admin template with unlimited possibilities.">
-    <meta name="keywords" content="admin template, Bigdeal admin template, dashboard template, flat admin template, responsive admin template, web app">
-    <meta name="author" content="pixelstrap">
-     <link rel="icon" href={{"/backend/images/favicon/favicon.ico"}} type="image/x-icon">
     <link rel="shortcut icon" href={{"/backend/images/favicon/favicon.ico"}} type="image/x-icon">
   <title>Admin</title>
 
