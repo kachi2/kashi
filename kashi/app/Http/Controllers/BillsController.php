@@ -280,15 +280,13 @@ class BillsController extends Controller
             }
     
         }elseif(isset($vend)){
-          //dd($zealVend);
-          
            if($vend['success'] == true){
              bill_transactions::where('transactionId', $transactionId)->update([
                 'status' => 'Successfull'
             ]);
             return view('users.services.successpay');
                
-           }elseif($vend['status'] == 'failed'){
+           }else{
              bill_transactions::where('transactionId', $transactionId)->update([
                 'status' => 'Failed'
             ]);
@@ -315,6 +313,7 @@ class BillsController extends Controller
             \Session::flash('alert-class', 'alert-danger');
                 return back();
             
+        }
         }else{
             bill_transactions::where('transactionId', $transactionId)->update([
                 'status' => 'Failed'
@@ -323,7 +322,7 @@ class BillsController extends Controller
             $user_w = User::where('id', auth()->user()->id)->first();
             $newWallet = $user_w->wallet + $total_amount;
             $newCom = $user_w->comm_wallet - $commission;
-             user::where('id', $user->id)->update([
+            user::where('id', $user->id)->update([
                 'wallet'=>$newWallet,
                 'comm_wallet'=> $newCom,
             ]);
@@ -338,11 +337,6 @@ class BillsController extends Controller
                 'prev_balance'=>$user_w->wallet,
                 'avail_balance' => $newWallet
             ]);
-            \Session::flash('msg', 'Transaction Failed, Please try Again');
-            \Session::flash('alert-class', 'alert-danger');
-            return back();
-        }
-        }else{
            \Session::flash('msg', 'Transaction Failed, Please try Again');
             \Session::flash('alert-class', 'alert-danger');
             return back(); 
