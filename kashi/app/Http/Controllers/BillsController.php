@@ -290,7 +290,7 @@ class BillsController extends Controller
              bill_transactions::where('transactionId', $transactionId)->update([
                 'status' => 'Failed'
             ]);
-            sleep(5);
+            sleep(1);
             $user_w = User::where('id', auth()->user()->id)->first();
             $newWallet = $user_w->wallet + $total_amount;
             $newCom = $user_w->comm_wallet - $commission;
