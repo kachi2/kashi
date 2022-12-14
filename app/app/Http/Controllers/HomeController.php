@@ -83,61 +83,61 @@ class HomeController extends Controller
         $data['reviewsCount'] = review::where('product_id', $id)->get();
         return view('users.carts.products', $data);
     }
-    public function my_wallet(){ 
-        $user = User::where('id', auth()->user()->id)->first();
-        if($user->accountNumber !== null){
-               $transactions = wallet_transaction::where('user_id', auth()->user()->id)->latest()->simplePaginate(5); 
-            return view('users.manage.my_wallet', compact('transactions')); 
-        }else{
-         $data = array(
-            "customer" => array(
-                "name" => auth()->user()->name,
-                "email" => auth()->user()->email,
-                "phoneNumber" => auth()->user()->phone,
-                "sendNotifications" => true
-            ),
-        "type" => "RESERVED",
-        "accountName" => auth()->user()->name,
-        "bankCode" => "000001",
-        "currency" =>  "NGN",
-        "country" => "NG"
-            );
-        $auth = 'TWlra3lub2JsZUBnbWFpbC5jb206TWlra3lub2JsZUAx' ;
-        $post = json_encode($data, true); 
-        $cURL = curl_init();
-            curl_setopt_array($cURL, array(
-            CURLOPT_URL => "https://connect-api.payant.ng/accounts",
-            CURLOPT_RETURNTRANSFER => true,
-            CURLOPT_ENCODING => "",
-            CURLOPT_MAXREDIRS => 10,
-            CURLOPT_HTTPHEADER => array(
-                "Content-Type: application/json",
-                "Authorization: Basic ".$auth,
-                "OrganizationID: 5f691331a526c91d7399aea2"
-            ),
-            CURLOPT_TIMEOUT => 0,
-            CURLOPT_FOLLOWLOCATION => true,
-            CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-            CURLOPT_CUSTOMREQUEST => "POST",
-            CURLOPT_POSTFIELDS => $post,
-            ));
-            $resp = curl_exec($cURL);
-            curl_close($cURL);
-            $response = json_decode($resp, true);
-            if($response['statusCode'] == 200){
-                $account = $response['data']['accountNumber'];
-                $cc = User::where('id', $user->id)->update(['accountNumber'=> $account]);
-             //dd($response['data']['accountNumber']);   
-            }else{
-                return redirect()->route('my_wallet');
-            }
-             $transactions = wallet_transaction::where('user_id', auth()->user()->id)->latest()->simplePaginate(5); 
-            return view('users.manage.my_wallet', compact('transactions')); 
-        }
+    // public function my_wallet(){ 
+    //     $user = User::where('id', auth()->user()->id)->first();
+    //     if($user->accountNumber !== null){
+    //            $transactions = wallet_transaction::where('user_id', auth()->user()->id)->latest()->simplePaginate(5); 
+    //         return view('users.manage.my_wallet', compact('transactions')); 
+    //     }else{
+    //      $data = array(
+    //         "customer" => array(
+    //             "name" => auth()->user()->name,
+    //             "email" => auth()->user()->email,
+    //             "phoneNumber" => auth()->user()->phone,
+    //             "sendNotifications" => true
+    //         ),
+    //     "type" => "RESERVED",
+    //     "accountName" => auth()->user()->name,
+    //     "bankCode" => "000001",
+    //     "currency" =>  "NGN",
+    //     "country" => "NG"
+    //         );
+    //     $auth = 'TWlra3lub2JsZUBnbWFpbC5jb206TWlra3lub2JsZUAx' ;
+    //     $post = json_encode($data, true); 
+    //     $cURL = curl_init();
+    //         curl_setopt_array($cURL, array(
+    //         CURLOPT_URL => "https://connect-api.payant.ng/accounts",
+    //         CURLOPT_RETURNTRANSFER => true,
+    //         CURLOPT_ENCODING => "",
+    //         CURLOPT_MAXREDIRS => 10,
+    //         CURLOPT_HTTPHEADER => array(
+    //             "Content-Type: application/json",
+    //             "Authorization: Basic ".$auth,
+    //             "OrganizationID: 5f691331a526c91d7399aea2"
+    //         ),
+    //         CURLOPT_TIMEOUT => 0,
+    //         CURLOPT_FOLLOWLOCATION => true,
+    //         CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+    //         CURLOPT_CUSTOMREQUEST => "POST",
+    //         CURLOPT_POSTFIELDS => $post,
+    //         ));
+    //         $resp = curl_exec($cURL);
+    //         curl_close($cURL);
+    //         $response = json_decode($resp, true);
+    //         if($response['statusCode'] == 200){
+    //             $account = $response['data']['accountNumber'];
+    //             $cc = User::where('id', $user->id)->update(['accountNumber'=> $account]);
+    //          //dd($response['data']['accountNumber']);   
+    //         }else{
+    //             return redirect()->route('my_wallet');
+    //         }
+    //          $transactions = wallet_transaction::where('user_id', auth()->user()->id)->latest()->simplePaginate(5); 
+    //         return view('users.manage.my_wallet', compact('transactions')); 
+    //     }
         
         
 
-    }
+    // }
     public function trans_details($id){
 
         $transactions = bill_transactions::where('transactionId', $id)->first();
