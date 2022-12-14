@@ -132,7 +132,7 @@ class HomeController extends Controller
            // }
            //  $transactions = wallet_transaction::where('user_id', auth()->user()->id)->latest()->simplePaginate(5); 
            // return view('users.manage.my_wallet', compact('transactions')); 
-        }
+     //   }
         
         
 
