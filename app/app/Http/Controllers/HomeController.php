@@ -84,10 +84,11 @@ class HomeController extends Controller
         return view('users.carts.products', $data);
     }
     public function my_wallet(){ 
-        $user = User::where('id', auth()->user()->id)->first();
-               $transactions = wallet_transaction::where('user_id', auth()->user()->id)->latest()->simplePaginate(5); 
-            return view('users.manage.my_wallet', compact('transactions')); 
-  
+        // $user = User::where('id', auth()->user()->id)->first();
+        // if($user->accountNumber !== null){
+        //        $transactions = wallet_transaction::where('user_id', auth()->user()->id)->latest()->simplePaginate(5); 
+        //     return view('users.manage.my_wallet', compact('transactions')); 
+        // }else{
         //  $data = array(
         //     "customer" => array(
         //         "name" => auth()->user()->name,
@@ -129,10 +130,10 @@ class HomeController extends Controller
         //      //dd($response['data']['accountNumber']);   
         //     }else{
         //         return redirect()->route('my_wallet');
-           // }
-           //  $transactions = wallet_transaction::where('user_id', auth()->user()->id)->latest()->simplePaginate(5); 
-           // return view('users.manage.my_wallet', compact('transactions')); 
-     //   }
+        //     }
+             $transactions = wallet_transaction::where('user_id', auth()->user()->id)->latest()->simplePaginate(5); 
+            return view('users.manage.my_wallet', compact('transactions')); 
+      //  }
         
         
 
