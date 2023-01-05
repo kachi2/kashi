@@ -73,7 +73,6 @@ class HomeController extends Controller
         $transactions = bill_transactions::where('user_id', auth()->user()->id)->latest()->simplePaginate(10);   
         return view('users.manage.transactions', compact('transactions'));
     }
-
     public function product_details($id){
 
         $data['item'] = product::where('id', $id)->first();
