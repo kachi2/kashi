@@ -451,6 +451,7 @@ public function search(Request $request)
             $auth = 'TWlra3lub2JsZUBnbWFpbC5jb206TWlra3lub2JsZUAx' ;
             $post = json_encode($data, true); 
             $cURL = curl_init();
+            
                 curl_setopt_array($cURL, array(
                 CURLOPT_URL => "https://connect-sandbox.herokuapp.com/accounts/simulator/transfer",
                 CURLOPT_RETURNTRANSFER => true,
