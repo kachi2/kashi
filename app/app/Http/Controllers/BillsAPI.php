@@ -382,4 +382,7 @@ class BillsAPI extends Controller
             $data = SmeData::where('slug', $slug)->get();
             return $data;
         }
+
+
+
 }

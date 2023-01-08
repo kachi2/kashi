@@ -19,6 +19,7 @@ use App\bill_transactions;
 use App\notifications;
 use App\webhook_calls;
 use App\fund_request;
+use Carbon\Carbon;
 use DB;
 use Illuminate\Support\Facades\Hash;
 use Symfony\Component\HttpFoundation\Session\Session;
@@ -41,13 +42,20 @@ class HomeController extends Controller
      *
      * @return \Illuminate\Contracts\Support\Renderable
      */
-    public function index()
+    public function index() 
     {
         $bill_category = bill_category::All();
-        $top_products = product::where('status', '1')->take(20)->latest()->get();
+        // $top_products = product::whereHas('category', fn($q) => $q->where('status', '1'))->get();
+        // $top_products = product::with(['category' => fn($q) => 
+        // $q->where('name', '')])->get();
+
+        $top_products = product::get()->load('subcat');
+        dd($top_products);
         $recent = product::where('status', '1')->take(10)->inRandomOrder()->get();
         $products = product::where(['status' => '1', ])->where('views','>','5')->inRandomOrder()->take(10)->get();
         $category = category::all();
+
+        
 
         return view('users.index', compact('bill_category', 'top_products', 'category', 'products', 'recent'));
     }
@@ -451,7 +459,7 @@ public function search(Request $request)
             $auth = 'TWlra3lub2JsZUBnbWFpbC5jb206TWlra3lub2JsZUAx' ;
             $post = json_encode($data, true); 
             $cURL = curl_init();
-            
+
                 curl_setopt_array($cURL, array(
                 CURLOPT_URL => "https://connect-sandbox.herokuapp.com/accounts/simulator/transfer",
                 CURLOPT_RETURNTRANSFER => true,
