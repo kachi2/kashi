@@ -45,7 +45,7 @@ class HomeController extends Controller
     public function index() 
     {
         $bill_category = bill_category::All();
-        // $top_products = product::whereHas('category', fn($q) => $q->where('status', '1'))->get();
+         $top_products = product::whereHas('category', fn($q) => $q->where('status', '1'))->get();
         // $top_products = product::with(['category' => fn($q) => 
         // $q->where('name', '')])->get();
 
