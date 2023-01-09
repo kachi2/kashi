@@ -20,7 +20,7 @@ use App\notifications;
 use App\webhook_calls;
 use App\fund_request;
 use Carbon\Carbon;
-use DB;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Symfony\Component\HttpFoundation\Session\Session;
 
@@ -45,17 +45,15 @@ class HomeController extends Controller
     public function index() 
     {
         $bill_category = bill_category::All();
-        $top_products = product::whereHas('category', fn($q) => $q->where('status', '1'))->get();
-        $top_products = product::with(['category' => fn($q) => 
-        $q->where('name', '')])->get();
+        // $top_products = product::whereHas('category', fn($q) => $q->where('status', '1'))->get();
+        // $top_products = product::with(['category' => fn($q) => 
+        // $q->where('name', '')])->get();
 
-        $top_products = product::get()->load('subcat');
-        dd($top_products);
+        // $top_products = product::get()->load('subcat');
+        // dd($top_products);
         $recent = product::where('status', '1')->take(10)->inRandomOrder()->get();
         $products = product::where(['status' => '1', ])->where('views','>','5')->inRandomOrder()->take(10)->get();
         $category = category::all();
-
-        
 
         return view('users.index', compact('bill_category', 'top_products', 'category', 'products', 'recent'));
     }

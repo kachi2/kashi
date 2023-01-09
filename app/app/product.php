@@ -34,16 +34,16 @@ class product extends Model
       return $this->belongsTo(category::class);
     }
 
-    public function category(): BelongsTo
-    {
-      return $this->belongsTo(Category::class);
-    }
+    // public function category(): BelongsTo
+    // {
+    //   return $this->belongsTo(Category::class);
+    // }
 
   
-    // public function category(){
+    public function category(){
 
-    //     return $this->belongsTo('App\category', 'category_id', 'id');
-    // }
+        return $this->belongsTo('App\category', 'category_id', 'id');
+    }
     public function subcat(){
 
         return $this->belongsTo('App\sub_category', 'sub_category_id', 'id');
